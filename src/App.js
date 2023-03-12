@@ -1,9 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Users from './components/users'
 import api from './api'
 
 function App() {
-  const [users, setUsers] = useState(api.users.fetchAll())
+  const [users, setUsers] = useState()
+
+  useEffect(() => {
+    api.users().then((data) => {
+      return setUsers(data)
+    })
+  }, [])
 
   const handleDelete = (userId) => {
     const userData = users.filter((user) => user._id !== userId)
@@ -19,11 +25,13 @@ function App() {
 
   return (
     <div className="App container">
-      <Users
-        onToggleBookmark={handleToggleBookmark}
-        users={users}
-        onDelete={handleDelete}
-      />
+      {users && (
+        <Users
+          onToggleBookmark={handleToggleBookmark}
+          users={users}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   )
 }
