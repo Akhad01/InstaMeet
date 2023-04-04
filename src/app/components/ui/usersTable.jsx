@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import Bookmark from '../common/bookmark'
-import QualitiesList from './qualities/qualitiesList'
-import Table from '../common/table/table'
+import Qualities from './qualities/qualitiesList'
+import { Table } from '../common/table'
 
 const UsersTable = ({
   users,
@@ -21,7 +21,7 @@ const UsersTable = ({
     },
     qualities: {
       name: 'Качества',
-      component: (user) => <QualitiesList qualities={user.qualities} />,
+      component: (user) => <Qualities qualities={user.qualities} />,
     },
     profession: { path: 'profession.name', name: 'Профессия' },
     completedMeetings: { path: 'completedMeetings', name: 'Встретился, раз' },
