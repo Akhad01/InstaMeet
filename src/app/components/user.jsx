@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getById } from '../api/fake.api/user.api'
-import QualitiesList from './qualitiesList'
+import QualitiesList from './ui/qualities/qualitiesList'
 
 const User = () => {
   const params = useParams()

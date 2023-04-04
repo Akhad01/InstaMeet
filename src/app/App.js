@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import Users from './layout/users'
 import Main from './layout/main'
 import Login from './layout/login'
-import NavBar from './components/navBar'
+import NavBar from './components/ui/navBar'
 import User from './components/user'
 
 function App() {
