@@ -9,6 +9,10 @@ const SelectField = ({
   option,
   error,
 }) => {
+  const handleChange = ({ target }) => {
+    onChange({ name: target.name, value: target.value })
+  }
+
   const getInputClass = () => {
     return 'form-select' + (error ? ' is-invalid' : '')
   }
@@ -31,7 +35,7 @@ const SelectField = ({
         name="profession"
         value={value}
         id="validationCustom04"
-        onChange={onChange}
+        onChange={handleChange}
       >
         <option disabled value="">
           {defaultOption}
