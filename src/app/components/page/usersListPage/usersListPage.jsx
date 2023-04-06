@@ -33,7 +33,6 @@ const UsersListPage = () => {
 
   const handleToggleBookmark = (id) => {
     const elementIndex = users.findIndex((elem) => elem._id === id)
-    console.log('users', elementIndex)
 
     const newBookmark = [...users]
     newBookmark[elementIndex].bookmark = !newBookmark[elementIndex].bookmark

@@ -6,7 +6,11 @@ export function validator(data, config) {
 
     switch (validateMethod) {
       case 'isRequired':
-        statusValidate = data.trim() === ''
+        if (typeof data === 'boolean') {
+          statusValidate = !data
+        } else {
+          statusValidate = data.trim() === ''
+        }
         break
       case 'isEmail': {
         const emailRegExp = /^\S+@\S+\.\S+$/g
