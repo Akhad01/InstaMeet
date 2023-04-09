@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { getById } from '../../../api/fake.api/user.api'
 import QualitiesList from '../../ui/qualities/qualitiesList'
 
 const UserPage = ({ userId }) => {
+  const history = useNavigate()
+
   const [user, setUser] = useState()
 
   useEffect(() => {
@@ -12,6 +14,10 @@ const UserPage = ({ userId }) => {
       return setUser(data)
     })
   }, [userId])
+
+  const handleClick = () => {
+    history(`/users/${userId}/edit`)
+  }
 
   return (
     <div>
@@ -23,9 +29,9 @@ const UserPage = ({ userId }) => {
           <p>completedMeetings: {user.completedMeetings}</p>
 
           <h2>Rate: {user.rate}</h2>
-          <Link to="/users" className="btn btn-info">
-            Все пользователи
-          </Link>
+          <button onClick={handleClick} className="btn btn-info">
+            Изменить
+          </button>
         </div>
       )}
     </div>
