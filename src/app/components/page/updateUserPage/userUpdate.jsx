@@ -6,7 +6,6 @@ import TextField from '../../common/form/textField'
 import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
-import { getById, update } from '../../../api/fake.api/user.api'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const UserUpdate = () => {
@@ -55,7 +54,7 @@ const UserUpdate = () => {
   useEffect(() => {
     setIsLoading(true)
 
-    getById(userId).then(({ profession, qualities, ...data }) => {
+    api.users.getById(userId).then(({ profession, qualities, ...data }) => {
       setData((prevState) => ({
         ...prevState,
         ...data,
@@ -64,8 +63,8 @@ const UserUpdate = () => {
       }))
     })
 
-    api.professions().then((data) => setProfession(data))
-    api.qualities().then((data) => setQualities(data))
+    api.professions.fetchAll().then((data) => setProfession(data))
+    api.qualities.fetchAll().then((data) => setQualities(data))
   }, [userId])
 
   useEffect(() => {
@@ -134,11 +133,13 @@ const UserUpdate = () => {
 
     const { profession, qualities } = data
 
-    update(userId, {
-      ...data,
-      profession: getProfessionById(profession),
-      qualities: getQualities(qualities),
-    }).then((data) => history(`/users/${data._id}`))
+    api.users
+      .update(userId, {
+        ...data,
+        profession: getProfessionById(profession),
+        qualities: getQualities(qualities),
+      })
+      .then((data) => history(`/users/${data._id}`))
   }
 
   const isValid = Object.keys(errors).length === 0

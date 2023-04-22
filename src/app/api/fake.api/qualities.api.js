@@ -25,7 +25,7 @@ const qualities = {
     color: 'info',
   },
   uncertain: {
-    _id: '67rdca3eeb7f6fgeed471103',
+    _id: '67rdca3eeb7f6fgeed4711015',
     name: 'Неуверенный',
     color: 'dark',
   },
@@ -37,4 +37,8 @@ const fetchAll = () =>
     }, 2000)
   })
 
-export default fetchAll
+const qualitiesData = {
+  fetchAll,
+}
+
+export default qualitiesData

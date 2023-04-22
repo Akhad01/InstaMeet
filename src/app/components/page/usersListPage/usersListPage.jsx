@@ -11,7 +11,7 @@ import { paginate } from '../../../utils/paginate'
 
 const UsersListPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [professions, setProfession] = useState(api.professions())
+  const [professions, setProfession] = useState(api.professions.fetchAll())
   const [selectedProf, setSelectedProf] = useState()
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
   const [searchQuery, setSearchQuery] = useState('')
@@ -21,7 +21,7 @@ const UsersListPage = () => {
   const [users, setUsers] = useState()
 
   useEffect(() => {
-    api.users().then((data) => {
+    api.users.fetchAll().then((data) => {
       return setUsers(data)
     })
   }, [])
@@ -40,7 +40,7 @@ const UsersListPage = () => {
   }
 
   useEffect(() => {
-    api.professions().then((data) => setProfession(data))
+    api.professions.fetchAll().then((data) => setProfession(data))
   }, [])
 
   useEffect(() => {

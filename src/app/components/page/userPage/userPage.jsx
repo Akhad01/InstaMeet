@@ -1,41 +1,42 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
-import { getById } from '../../../api/fake.api/user.api'
-import QualitiesList from '../../ui/qualities/qualitiesList'
+import qualities from '../../../api/fake.api/user.api'
+import UserCard from '../../ui/userCard'
+import MeetingsCard from '../../ui/meetingsCard'
+import QualitiesCard from '../../ui/qualitiesCard'
+import Comments from '../../ui/comments'
 
 const UserPage = ({ userId }) => {
-  const history = useNavigate()
-
   const [user, setUser] = useState()
 
   useEffect(() => {
-    getById(userId).then((data) => {
+    qualities.getById(userId).then((data) => {
       return setUser(data)
     })
   }, [userId])
 
-  const handleClick = () => {
-    history(`/users/${userId}/edit`)
+  if (user) {
+    return (
+      <div>
+        {user && (
+          <div className="container">
+            <div className="row gutters-sm">
+              <div className="col-md-4 mb-3">
+                <UserCard user={user} userId={userId} />
+                <QualitiesCard user={user} />
+                <MeetingsCard value={user.completedMeetings} />
+              </div>
+              <div className="col-md-8">
+                <Comments />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  } else {
+    return <h1>Loading...</h1>
   }
-
-  return (
-    <div>
-      {user && (
-        <div>
-          <h2>{user.name}</h2>
-          <h3>Профессия: {user.profession.name}</h3>
-          <QualitiesList qualities={user.qualities} />
-          <p>completedMeetings: {user.completedMeetings}</p>
-
-          <h2>Rate: {user.rate}</h2>
-          <button onClick={handleClick} className="btn btn-info">
-            Изменить
-          </button>
-        </div>
-      )}
-    </div>
-  )
 }
 
 export default UserPage
