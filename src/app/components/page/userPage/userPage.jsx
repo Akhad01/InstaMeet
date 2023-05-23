@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react'
 
-import qualities from '../../../api/fake.api/user.api'
 import UserCard from '../../ui/userCard'
 import MeetingsCard from '../../ui/meetingsCard'
 import QualitiesCard from '../../ui/qualitiesCard'
 import Comments from '../../ui/comments'
+import api from '../../../api'
 
 const UserPage = ({ userId }) => {
   const [user, setUser] = useState()
 
   useEffect(() => {
-    qualities.getById(userId).then((data) => {
-      return setUser(data)
-    })
-  }, [userId])
+    api.users.getById(userId).then((data) => setUser(data))
+  }, [])
 
   if (user) {
     return (

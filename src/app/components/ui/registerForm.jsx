@@ -23,8 +23,9 @@ const RegisterForm = () => {
   const [professions, setProfession] = useState()
 
   useEffect(() => {
-    api.professions().then((data) => setProfession(data))
-    api.qualities().then((data) => setQualities(data))
+    api.professions.fetchAll().then((data) => setProfession(data))
+
+    api.qualities.fetchAll().then((data) => setQualities(data))
   }, [])
 
   const handleChange = (target) => {
@@ -92,6 +93,13 @@ const RegisterForm = () => {
     }
   }
 
+  const arrayOfProfessions =
+    professions &&
+    Object.keys(professions).map((profession) => ({
+      name: professions[profession].name,
+      value: professions[profession]._id,
+    }))
+
   return (
     <form onSubmit={handleSubmit}>
       <TextField
@@ -112,7 +120,7 @@ const RegisterForm = () => {
 
       <SelectField
         defaultOption="Choose..."
-        option={professions}
+        option={arrayOfProfessions}
         onChange={handleChange}
         value={data.profession}
         error={errors.profession}

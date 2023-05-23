@@ -8,6 +8,7 @@ import Pagination from '../../common/pagination'
 
 import api from '../../../api'
 import { paginate } from '../../../utils/paginate'
+import { useUser } from '../../../../hooks/useUsers'
 
 const UsersListPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -18,17 +19,10 @@ const UsersListPage = () => {
 
   const pageSize = 8
 
-  const [users, setUsers] = useState()
-
-  useEffect(() => {
-    api.users.fetchAll().then((data) => {
-      return setUsers(data)
-    })
-  }, [])
+  const { users } = useUser()
 
   const handleDelete = (userId) => {
-    const userData = users.filter((user) => user._id !== userId)
-    setUsers(userData)
+    console.log(userId)
   }
 
   const handleToggleBookmark = (id) => {
@@ -36,7 +30,6 @@ const UsersListPage = () => {
 
     const newBookmark = [...users]
     newBookmark[elementIndex].bookmark = !newBookmark[elementIndex].bookmark
-    setUsers(newBookmark)
   }
 
   useEffect(() => {
