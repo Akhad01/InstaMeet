@@ -3,8 +3,11 @@ import TextField from '../common/form/textField'
 import { validator } from '../../utils/validator'
 import CheckBoxField from '../common/form/checkBoxField'
 import { useAuth } from '../../../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
+  const navigate = useNavigate()
+
   const [data, setData] = useState({ email: '', password: '', stayOn: false })
   const [errors, setErrors] = useState({})
   const [enterError, setEnterError] = useState(null)
@@ -46,6 +49,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     validate()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   const validate = () => {
@@ -68,6 +72,7 @@ const LoginForm = () => {
 
     try {
       await signIn(data)
+      navigate('/')
     } catch (error) {
       setEnterError(error.message)
     }

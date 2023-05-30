@@ -9,8 +9,11 @@ import CheckBoxField from '../common/form/checkBoxField'
 import { useProfessions } from '../../../hooks/useProfession'
 import { useQualities } from '../../../hooks/useQualities'
 import { useAuth } from '../../../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 const RegisterForm = () => {
+  const navigate = useNavigate()
+
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -77,6 +80,7 @@ const RegisterForm = () => {
 
   useEffect(() => {
     validate()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   const validate = () => {
@@ -104,6 +108,8 @@ const RegisterForm = () => {
 
     try {
       await signUp(newData)
+
+      navigate('/')
     } catch (error) {
       setErrors(error)
     }

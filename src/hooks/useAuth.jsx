@@ -5,6 +5,13 @@ import { toast } from 'react-toastify'
 import userService from '../app/services/user.service'
 import { setToken } from '../app/services/localStorage.service'
 
+const httpAuth = axios.create({
+  baseURL: 'https://identitytoolkit.googleapis.com/v1/',
+  params: {
+    key: process.env.REACT_APP_FIREBASE_KEY,
+  },
+})
+
 const AuthContext = React.createContext()
 
 export const useAuth = () => {
@@ -16,10 +23,11 @@ export const AuthProvider = ({ children }) => {
 
   async function signUp({ email, password, ...rest }) {
     try {
-      const { data } = await axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAM9001-zCX3v54BOFQajBoCE5EH5463Hw`,
-        { email, password, returnSecureToken: true }
-      )
+      const { data } = await httpAuth.post(`accounts:signUp`, {
+        email,
+        password,
+        returnSecureToken: true,
+      })
 
       setToken(data)
 
@@ -42,10 +50,11 @@ export const AuthProvider = ({ children }) => {
 
   async function signIn({ email, password }) {
     try {
-      const { data } = await axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAM9001-zCX3v54BOFQajBoCE5EH5463Hw`,
-        { email, password, returnSecureToken: true }
-      )
+      const { data } = await httpAuth.post(`accounts:signInWithPassword`, {
+        email,
+        password,
+        returnSecureToken: true,
+      })
 
       setToken(data)
     } catch (error) {
