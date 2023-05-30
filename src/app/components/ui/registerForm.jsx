@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 
 import { validator } from '../../utils/validator'
-import api from '../../api'
 import TextField from '../common/form/textField'
 import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 import CheckBoxField from '../common/form/checkBoxField'
+import { useProfessions } from '../../../hooks/useProfession'
+import { useQualities } from '../../../hooks/useQualities'
+import { useAuth } from '../../../hooks/useAuth'
 
 const RegisterForm = () => {
   const [data, setData] = useState({
@@ -18,15 +20,18 @@ const RegisterForm = () => {
     licence: false,
   })
 
-  const [qualities, setQualities] = useState({})
   const [errors, setErrors] = useState({})
-  const [professions, setProfession] = useState()
 
-  useEffect(() => {
-    api.professions.fetchAll().then((data) => setProfession(data))
+  const { professions } = useProfessions()
 
-    api.qualities.fetchAll().then((data) => setQualities(data))
-  }, [])
+  const { qualities } = useQualities()
+
+  const { signUp } = useAuth()
+
+  const qualitiesList = qualities.map((quality) => ({
+    label: quality.name,
+    value: quality._id,
+  }))
 
   const handleChange = (target) => {
     setData((prevState) => {
@@ -84,12 +89,23 @@ const RegisterForm = () => {
 
   const isValid = Object.keys(errors).length === 0
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const isValid = validate()
 
     if (!isValid) {
       return
+    }
+
+    const newData = {
+      ...data,
+      qualities: data.qualities.map((q) => q.value),
+    }
+
+    try {
+      await signUp(newData)
+    } catch (error) {
+      setErrors(error)
     }
   }
 
@@ -140,7 +156,7 @@ const RegisterForm = () => {
       />
       <MultiSelectField
         onChange={handleChange}
-        options={qualities}
+        options={qualitiesList}
         defaultValue={data.qualities}
         name="qualities"
         label="Выберите ваши качества"

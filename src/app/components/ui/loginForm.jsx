@@ -2,15 +2,21 @@ import React, { useEffect, useState } from 'react'
 import TextField from '../common/form/textField'
 import { validator } from '../../utils/validator'
 import CheckBoxField from '../common/form/checkBoxField'
+import { useAuth } from '../../../hooks/useAuth'
 
 const LoginForm = () => {
   const [data, setData] = useState({ email: '', password: '', stayOn: false })
   const [errors, setErrors] = useState({})
+  const [enterError, setEnterError] = useState(null)
+
+  const { signIn } = useAuth()
 
   const handleChange = (target) => {
     setData((prevState) => {
       return { ...prevState, [target.name]: target.value }
     })
+
+    setEnterError(null)
   }
 
   const validatorConfig = {
@@ -52,12 +58,18 @@ const LoginForm = () => {
 
   const isValid = Object.keys(errors).length === 0
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const isValid = validate()
 
     if (!isValid) {
       return
+    }
+
+    try {
+      await signIn(data)
+    } catch (error) {
+      setEnterError(error.message)
     }
   }
 
@@ -82,10 +94,12 @@ const LoginForm = () => {
         Оставаться в системе
       </CheckBoxField>
 
+      {enterError && <p className="text-danger">{enterError}</p>}
+
       <button
         className="btn btn-primary w-100 mx-auto"
         type="submit"
-        disabled={!isValid}
+        disabled={!isValid || enterError}
       >
         submit
       </button>
