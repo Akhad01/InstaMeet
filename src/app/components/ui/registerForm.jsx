@@ -16,6 +16,7 @@ const RegisterForm = () => {
 
   const [data, setData] = useState({
     email: '',
+    name: '',
     password: '',
     profession: '',
     sex: 'male',
@@ -47,6 +48,14 @@ const RegisterForm = () => {
       isRequired: { message: 'Электронная почта обязательно для заполнения' },
       isEmail: {
         message: 'Email введен некоректно',
+      },
+    },
+
+    name: {
+      isRequired: { message: 'Имя обязательно для заполнения' },
+      min: {
+        message: 'Имя должно состоять минимум из 3 символов',
+        value: 3,
       },
     },
 
@@ -106,6 +115,8 @@ const RegisterForm = () => {
       qualities: data.qualities.map((q) => q.value),
     }
 
+    console.log('newData', newData)
+
     try {
       await signUp(newData)
 
@@ -130,6 +141,13 @@ const RegisterForm = () => {
         value={data.email}
         onChange={handleChange}
         error={errors.email}
+      />
+      <TextField
+        label="Имя"
+        name="name"
+        value={data.name}
+        onChange={handleChange}
+        error={errors.name}
       />
       <TextField
         label="Пароль"
