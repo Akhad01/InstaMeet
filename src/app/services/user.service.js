@@ -1,4 +1,5 @@
 import httpService from './http.service'
+import localStorageService from './localStorage.service'
 
 const userEndpoint = 'user/'
 
@@ -14,6 +15,12 @@ const userService = {
 
     console.log('createDta', data)
 
+    return data
+  },
+  getCurrentUser: async () => {
+    const { data } = await httpService.get(
+      userEndpoint + localStorageService.getUserId()
+    )
     return data
   },
 }

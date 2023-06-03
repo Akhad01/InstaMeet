@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import userService from '../app/services/user.service'
-import { setToken } from '../app/services/localStorage.service'
+import localStorageService, {
+  setToken,
+} from '../app/services/localStorage.service'
 
 const httpAuth = axios.create({
   baseURL: 'https://identitytoolkit.googleapis.com/v1/',
@@ -20,6 +22,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null)
+  const [currentUser, setUser] = useState()
 
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -67,6 +70,7 @@ export const AuthProvider = ({ children }) => {
       })
 
       setToken(data)
+      getUserData()
     } catch (error) {
       setError(error)
 
@@ -86,6 +90,8 @@ export const AuthProvider = ({ children }) => {
   async function createUser(data) {
     try {
       const { content } = await userService.create(data)
+
+      setUser(content)
       console.log('content', content)
     } catch (error) {
       setError(error)
@@ -98,6 +104,22 @@ export const AuthProvider = ({ children }) => {
     setError(message)
   }
 
+  async function getUserData() {
+    try {
+      const { content } = await userService.getCurrentUser()
+      setUser(content)
+    } catch (error) {
+      setError(error)
+    }
+  }
+
+  useEffect(() => {
+    if (localStorageService.getAccessToken()) {
+      console.log('lock')
+      getUserData()
+    }
+  }, [])
+
   useEffect(() => {
     if (!error !== null) {
       toast.error(error)
@@ -106,7 +128,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [error])
   return (
-    <AuthContext.Provider value={{ signUp, signIn }}>
+    <AuthContext.Provider value={{ signUp, signIn, currentUser }}>
       {children}
     </AuthContext.Provider>
   )
