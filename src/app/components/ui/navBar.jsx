@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../../hooks/useAuth'
+import NavProfile from './navProfile'
 
 const NavBar = () => {
   const { currentUser } = useAuth()
@@ -16,7 +17,7 @@ const NavBar = () => {
           {currentUser && (
             <li className="nav-item">
               <Link
-                to="users"
+                to="/users"
                 className="nav-link"
                 aria-current="page"
                 href="#"
@@ -28,9 +29,9 @@ const NavBar = () => {
         </ul>
         <div className="d-flex">
           {currentUser ? (
-            <p>User</p>
+            <NavProfile />
           ) : (
-            <Link to="login" className="nav-link" aria-current="page" href="#">
+            <Link to="/login" className="nav-link" aria-current="page" href="#">
               Login
             </Link>
           )}
