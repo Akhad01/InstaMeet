@@ -35,6 +35,12 @@ http.interceptors.request.use(
           expiresIn: data.expires_in,
         })
       }
+
+      const asseccToken = localStorageService.getAccessToken()
+
+      if (asseccToken) {
+        config.params = { ...config.params, auth: asseccToken }
+      }
     }
 
     return config
