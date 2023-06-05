@@ -3,10 +3,12 @@ import TextField from '../common/form/textField'
 import { validator } from '../../utils/validator'
 import CheckBoxField from '../common/form/checkBoxField'
 import { useAuth } from '../../../hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const navigate = useNavigate()
+
+  const location = useLocation()
 
   const [data, setData] = useState({ email: '', password: '', stayOn: false })
   const [errors, setErrors] = useState({})
@@ -72,7 +74,7 @@ const LoginForm = () => {
 
     try {
       await signIn(data)
-      navigate('/')
+      navigate(location.state ? location.state.from : '/')
     } catch (error) {
       setEnterError(error.message)
     }

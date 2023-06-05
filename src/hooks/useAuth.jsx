@@ -93,7 +93,6 @@ export const AuthProvider = ({ children }) => {
       const { content } = await userService.create(data)
 
       setUser(content)
-      console.log('content', content)
     } catch (error) {
       setError(error)
     }
@@ -118,7 +117,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (localStorageService.getAccessToken()) {
-      console.log('lock')
       getUserData()
     } else {
       setLoading(false)

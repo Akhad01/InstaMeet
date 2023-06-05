@@ -166,8 +166,6 @@ const getById = (id) =>
     window.setTimeout(function () {
       resolve(
         JSON.parse(localStorage.getItem('users')).find((user) => {
-          console.log('get', id)
-
           return user._id === id
         })
       )

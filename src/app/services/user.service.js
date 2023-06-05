@@ -13,8 +13,6 @@ const userService = {
   create: async (payload) => {
     const { data } = await httpService.put(userEndpoint + payload._id, payload)
 
-    console.log('createDta', data)
-
     return data
   },
   getCurrentUser: async () => {
