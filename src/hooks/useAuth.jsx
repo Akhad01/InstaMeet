@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
       })
 
       setToken(data)
-      getUserData()
+      await getUserData()
     } catch (error) {
       setError(error)
 
