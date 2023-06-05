@@ -23,6 +23,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [currentUser, setUser] = useState()
+  const [isLoading, setLoading] = useState(true)
 
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -110,6 +111,8 @@ export const AuthProvider = ({ children }) => {
       setUser(content)
     } catch (error) {
       setError(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -117,6 +120,8 @@ export const AuthProvider = ({ children }) => {
     if (localStorageService.getAccessToken()) {
       console.log('lock')
       getUserData()
+    } else {
+      setLoading(false)
     }
   }, [])
 
@@ -129,7 +134,7 @@ export const AuthProvider = ({ children }) => {
   }, [error])
   return (
     <AuthContext.Provider value={{ signUp, signIn, currentUser }}>
-      {children}
+      {!isLoading ? children : 'Loading...'}
     </AuthContext.Provider>
   )
 }
