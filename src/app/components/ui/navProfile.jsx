@@ -17,9 +17,7 @@ const NavProfile = () => {
 
         <img
           className="img-responsive rounded-circle"
-          src={`https://avatars.dicebear.com/api/avataaars/${(Math.random() + 1)
-            .toString(36)
-            .substring(7)}.svg`}
+          src={currentUser.image}
           height="40"
           alt=""
         />

@@ -53,6 +53,9 @@ export const AuthProvider = ({ children }) => {
         rate: randomInt(1, 5),
         completedMeetings: randomInt(0, 250),
         email,
+        image: `https://avatars.dicebear.com/api/avataaars/${(Math.random() + 1)
+          .toString(36)
+          .substring(7)}.svg`,
         ...rest,
       })
     } catch (error) {
