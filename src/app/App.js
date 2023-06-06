@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import QualitiesProvider from '../hooks/useQualities'
 import { AuthProvider } from '../hooks/useAuth'
 import ProtectedRoute from './components/ui/protectedRoute'
+import LogOut from './layout/logOut'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/logout" element={<LogOut />} />
               <Route path="/" element={<Main />} />
               <Route path="*" element={<Main />} />
             </Routes>
