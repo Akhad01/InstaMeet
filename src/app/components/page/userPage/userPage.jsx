@@ -4,7 +4,7 @@ import UserCard from '../../ui/userCard'
 import MeetingsCard from '../../ui/meetingsCard'
 import QualitiesCard from '../../ui/qualitiesCard'
 import Comments from '../../ui/comments'
-import { useUser } from '../../../../hooks/useUsers'
+import { useUser } from '../../../hooks/useUsers'
 
 const UserPage = ({ userId }) => {
   const { getUserById } = useUser()

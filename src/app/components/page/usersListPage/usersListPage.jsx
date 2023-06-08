@@ -7,9 +7,9 @@ import UsersTable from '../../ui/usersTable'
 import Pagination from '../../common/pagination'
 
 import { paginate } from '../../../utils/paginate'
-import { useUser } from '../../../../hooks/useUsers'
-import { useProfessions } from '../../../../hooks/useProfession'
-import { useAuth } from '../../../../hooks/useAuth'
+import { useUser } from '../../../hooks/useUsers'
+import { useProfessions } from '../../../hooks/useProfession'
+import { useAuth } from '../../../hooks/useAuth'
 
 const UsersListPage = () => {
   const { isLoading: professionsLoading, professions } = useProfessions()

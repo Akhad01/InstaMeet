@@ -2,11 +2,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import userService from '../app/services/user.service'
-import localStorageService, {
-  setToken,
-} from '../app/services/localStorage.service'
+import userService from '../services/user.service'
 import { useNavigate } from 'react-router-dom'
+
+import localStorageService, { setToken } from '../services/localStorage.service'
 
 export const httpAuth = axios.create({
   baseURL: 'https://identitytoolkit.googleapis.com/v1/',

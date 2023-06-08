@@ -6,9 +6,9 @@ import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 import CheckBoxField from '../common/form/checkBoxField'
-import { useProfessions } from '../../../hooks/useProfession'
-import { useQualities } from '../../../hooks/useQualities'
-import { useAuth } from '../../../hooks/useAuth'
+import { useProfessions } from '../../hooks/useProfession'
+import { useQualities } from '../../hooks/useQualities'
+import { useAuth } from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 
 const RegisterForm = () => {

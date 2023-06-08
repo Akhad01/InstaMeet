@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Qualitie from './qualitie'
-import { useQualities } from '../../../../hooks/useQualities'
+import { useQualities } from '../../../hooks/useQualities'
 
 const QualitiesList = ({ qualities }) => {
   const { isLoading } = useQualities()
