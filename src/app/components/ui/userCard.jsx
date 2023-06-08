@@ -1,8 +1,12 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useAuth } from '../../../hooks/useAuth'
+
 const UserCard = ({ user, userId }) => {
   const history = useNavigate()
+
+  const { currentUser } = useAuth()
 
   const handleClick = () => {
     history(`/users/${userId}/edit`)
@@ -10,12 +14,15 @@ const UserCard = ({ user, userId }) => {
   return (
     <div className="card mb-3">
       <div className="card-body">
-        <button
-          onClick={handleClick}
-          className="position-absolute top-0 end-0 btn btn-light btn-sm"
-        >
-          <i className="bi bi-gear"></i>
-        </button>
+        {user._id === currentUser._id && (
+          <button
+            onClick={handleClick}
+            className="position-absolute top-0 end-0 btn btn-light btn-sm"
+          >
+            <i className="bi bi-gear"></i>
+          </button>
+        )}
+
         <div className="d-flex flex-column align-items-center text-center position-relative">
           <img
             src={user.image}
