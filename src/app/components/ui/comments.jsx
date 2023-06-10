@@ -6,23 +6,14 @@ import { orderBy } from 'lodash'
 import { useComments } from '../../hooks/useComments'
 
 const Comments = () => {
-  const { createComment, comments } = useComments()
+  const { createComment, comments, removeComment } = useComments()
 
   const handleRemoveComment = (id) => {
-    // api.comments.remove(id).then((data) => {
-    //   setComments(comments.filter((del) => del._id !== data))
-    // })
+    removeComment(id)
   }
 
   const handleSubmit = (data) => {
     createComment(data)
-
-    // api.comments
-    //   .add({
-    //     ...data,
-    //     pageId: userId,
-    //   })
-    //   .then((data) => setComments([...comments, data]))
   }
 
   const sortedComments = orderBy(comments, ['created_at'], ['desc'])

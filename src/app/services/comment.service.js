@@ -22,6 +22,12 @@ const commentService = {
 
     return data
   },
+
+  removeComment: async (commentId) => {
+    const { data } = await httpService.delete(commentEndpoint + commentId)
+
+    return data
+  },
 }
 
 export default commentService

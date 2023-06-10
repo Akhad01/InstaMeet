@@ -52,6 +52,7 @@ export const CommentsProvider = ({ children }) => {
 
   useEffect(() => {
     getComments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
   useEffect(() => {
@@ -69,8 +70,22 @@ export const CommentsProvider = ({ children }) => {
     setLoading(false)
   }
 
+  async function removeComment(id) {
+    try {
+      const { content } = await commentService.removeComment(id)
+
+      if (content === null) {
+        setComments((prevState) => prevState.filter((c) => c._id !== id))
+      }
+    } catch (error) {
+      errorCatcher(error)
+    }
+  }
+
   return (
-    <CommentsContext.Provider value={{ comments, createComment, isLoading }}>
+    <CommentsContext.Provider
+      value={{ comments, createComment, isLoading, removeComment }}
+    >
       {children}
     </CommentsContext.Provider>
   )
