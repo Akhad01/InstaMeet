@@ -1,27 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import CommentComponents from './commentComponents'
-import api from '../../api'
 import AddCommentForm from '../common/addCommentForm'
 import { orderBy } from 'lodash'
-import { useParams } from 'react-router-dom'
 import { useComments } from '../../hooks/useComments'
 
 const Comments = () => {
-  const { userId } = useParams()
-  const [comments, setComments] = useState([])
-
-  const { createComment } = useComments()
-
-  useEffect(() => {
-    api.comments.fetchCommentsForUser(userId).then((data) => setComments(data))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { createComment, comments } = useComments()
 
   const handleRemoveComment = (id) => {
-    api.comments.remove(id).then((data) => {
-      setComments(comments.filter((del) => del._id !== data))
-    })
+    // api.comments.remove(id).then((data) => {
+    //   setComments(comments.filter((del) => del._id !== data))
+    // })
   }
 
   const handleSubmit = (data) => {
