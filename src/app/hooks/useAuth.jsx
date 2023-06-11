@@ -109,12 +109,6 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  function errorCatcher(error) {
-    const { message } = error.response.data
-
-    setError(message)
-  }
-
   async function getUserData() {
     try {
       const { content } = await userService.getCurrentUser()
@@ -124,6 +118,12 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false)
     }
+  }
+
+  function errorCatcher(error) {
+    const { message } = error.response.data
+
+    setError(message)
   }
 
   useEffect(() => {

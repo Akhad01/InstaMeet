@@ -15,6 +15,16 @@ const QualitiesProvider = ({ children }) => {
   const [error, setError] = useState()
   const [isLoading, setLoading] = useState(true)
 
+  const getQuality = (id) => {
+    return qualities.find((quality) => quality._id === id)
+  }
+
+  function errorCatcher(error) {
+    const { message } = error.response.data
+
+    setError(message)
+  }
+
   useEffect(() => {
     async function getQualities() {
       try {
@@ -36,16 +46,6 @@ const QualitiesProvider = ({ children }) => {
       setError(null)
     }
   }, [error])
-
-  const getQuality = (id) => {
-    return qualities.find((quality) => quality._id === id)
-  }
-
-  function errorCatcher(error) {
-    const { message } = error.response.data
-
-    setError(message)
-  }
 
   return (
     <QualitiesContext.Provider value={{ isLoading, qualities, getQuality }}>

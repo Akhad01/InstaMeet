@@ -41,13 +41,31 @@ export const CommentsProvider = ({ children }) => {
   async function getComments() {
     try {
       const { content } = await commentService.getComments(userId)
-
       setComments(content)
     } catch (error) {
       errorCatcher(error)
     } finally {
       setLoading(false)
     }
+  }
+
+  async function removeComment(id) {
+    try {
+      const { content } = await commentService.removeComment(id)
+
+      if (content === null) {
+        setComments((prevState) => prevState.filter((c) => c._id !== id))
+      }
+    } catch (error) {
+      errorCatcher(error)
+    }
+  }
+
+  function errorCatcher(error) {
+    const { message } = error.response.data
+
+    setError(message)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -62,25 +80,6 @@ export const CommentsProvider = ({ children }) => {
       setError(null)
     }
   }, [error])
-
-  function errorCatcher(error) {
-    const { message } = error.response.data
-
-    setError(message)
-    setLoading(false)
-  }
-
-  async function removeComment(id) {
-    try {
-      const { content } = await commentService.removeComment(id)
-
-      if (content === null) {
-        setComments((prevState) => prevState.filter((c) => c._id !== id))
-      }
-    } catch (error) {
-      errorCatcher(error)
-    }
-  }
 
   return (
     <CommentsContext.Provider

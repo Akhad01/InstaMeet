@@ -1,6 +1,7 @@
 import React from 'react'
 import { displayDate } from '../../utils/displayData'
 import { useUser } from '../../hooks/useUsers'
+import { useAuth } from '../../hooks/useAuth'
 
 const Comment = ({
   onRemove,
@@ -9,6 +10,7 @@ const Comment = ({
   _id: id,
   created_at: created,
 }) => {
+  const { currentUser } = useAuth()
   const { getUserById } = useUser()
 
   const user = getUserById(userId)
@@ -32,12 +34,14 @@ const Comment = ({
                     {user && user.name}
                     <span className="small"> - {displayDate(created)}</span>
                   </p>
-                  <button
-                    onClick={() => onRemove(id)}
-                    className="btn btn-sm text-primary d-flex align-items-center"
-                  >
-                    <i className="bi bi-x-lg"></i>
-                  </button>
+                  {currentUser._id === userId && (
+                    <button
+                      onClick={() => onRemove(id)}
+                      className="btn btn-sm text-primary d-flex align-items-center"
+                    >
+                      <i className="bi bi-x-lg"></i>
+                    </button>
+                  )}
                 </div>
                 <p className="small mb-0">{content}</p>
               </div>
