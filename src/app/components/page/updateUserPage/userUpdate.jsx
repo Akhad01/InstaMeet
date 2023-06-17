@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
 import { validator } from '../../../utils/validator'
-import api from '../../../api'
 import TextField from '../../common/form/textField'
 import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useProfessions } from '../../../hooks/useProfession'
 import { useQualities } from '../../../hooks/useQualities'
 import { useAuth } from '../../../hooks/useAuth'
@@ -15,10 +14,6 @@ const UserUpdate = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
   const [errors, setErrors] = useState({})
-  const params = useParams()
-  const { userId } = params
-
-  console.log('data', data)
 
   const { isLoading: professionLoading, professions } = useProfessions()
 
@@ -33,30 +28,30 @@ const UserUpdate = () => {
     value: quality._id,
   }))
 
-  const { currentUser } = useAuth()
+  const { currentUser, updateUserDate } = useAuth()
 
-  const history = useNavigate()
+  const navigate = useNavigate()
 
-  const getProfessionById = (id) => {
-    for (const prof in professions) {
-      const profData = professions[prof]
-      if (profData._id === id) return profData
-    }
-  }
+  // const getProfessionById = (id) => {
+  //   for (const prof in professions) {
+  //     const profData = professions[prof]
+  //     if (profData._id === id) return profData
+  //   }
+  // }
 
-  const getQualities = (elements) => {
-    const qualitiesArray = []
+  // const getQualities = (elements) => {
+  //   const qualitiesArray = []
 
-    for (const elem of elements) {
-      for (const quality in qualities) {
-        if (elem.value === qualities[quality]._id) {
-          qualitiesArray.push(qualities[quality])
-        }
-      }
-    }
+  //   for (const elem of elements) {
+  //     for (const quality in qualities) {
+  //       if (elem.value === qualities[quality]._id) {
+  //         qualitiesArray.push(qualities[quality])
+  //       }
+  //     }
+  //   }
 
-    return qualitiesArray
-  }
+  //   return qualitiesArray
+  // }
 
   function getQualitiesListById(qualitiesIds) {
     const qualitiesArray = []
@@ -79,26 +74,7 @@ const UserUpdate = () => {
       label: qual.name,
       value: qual._id,
     }))
-    // return data.map((qual) => ({ label: qual.name, value: qual._id }))
   }
-
-  useEffect(() => {
-    setIsLoading(false)
-
-    // updateUserDate()
-
-    if (currentUser && !professionLoading && !qualitiesLoading && !data) {
-      setData({
-        ...currentUser,
-        qualities: transformData(currentUser.qualities),
-        profession: currentUser._id,
-      })
-    }
-  }, [currentUser, professionLoading, qualitiesLoading, data])
-
-  useEffect(() => {
-    setIsLoading(false)
-  }, [data])
 
   const handleChange = (target) => {
     setData((prevState) => {
@@ -153,23 +129,36 @@ const UserUpdate = () => {
     return Object.keys(errors).length === 0
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const isValid = validate()
     if (!isValid) {
       return
     }
 
-    const { profession, qualities } = data
+    await updateUserDate({
+      ...data,
+      qualities: data.qualities.map((quality) => quality.value),
+    })
 
-    api.users
-      .update(userId, {
-        ...data,
-        profession: getProfessionById(profession),
-        qualities: getQualities(qualities),
-      })
-      .then((data) => history(`/users/${data._id}`))
+    navigate(`/users/${currentUser._id}`)
   }
+
+  useEffect(() => {
+    if (currentUser && !professionLoading && !qualitiesLoading && !data) {
+      setData({
+        ...currentUser,
+        qualities: transformData(currentUser.qualities),
+        profession: currentUser._id,
+      })
+    }
+  }, [currentUser, professionLoading, qualitiesLoading, data])
+
+  useEffect(() => {
+    if (data && isLoading) {
+      setIsLoading(false)
+    }
+  }, [data])
 
   const isValid = Object.keys(errors).length === 0
 
@@ -177,7 +166,7 @@ const UserUpdate = () => {
     <div className="mt-5">
       <div className="row">
         <div className="col-md-6 offset-md-3 shadow p-4">
-          {!isLoading && Object.keys(professions).length > 0 ? (
+          {!isLoading && Object.keys(professionList).length > 0 ? (
             <form onSubmit={handleSubmit}>
               <TextField
                 label="Имя"
