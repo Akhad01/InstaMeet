@@ -20,13 +20,15 @@ const Comment = ({
       <div className="row">
         <div className="col">
           <div className="d-flex flex-start">
-            <img
-              src={user.image}
-              className="rounded-circle shadow-1-strong me-3"
-              alt="avatar"
-              width="65"
-              height="65"
-            />
+            {user && (
+              <img
+                src={user.image}
+                className="rounded-circle shadow-1-strong me-3"
+                alt="avatar"
+                width="65"
+                height="65"
+              />
+            )}
             <div className="flex-grow-1 flex-shrink-1">
               <div className="mb-4">
                 <div className="d-flex justify-content-between align-items-center">

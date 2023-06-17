@@ -24,12 +24,14 @@ const UserCard = ({ user, userId }) => {
         )}
 
         <div className="d-flex flex-column align-items-center text-center position-relative">
-          <img
-            src={user.image}
-            className="rounded-circle"
-            alt="avatar"
-            width="150"
-          />
+          {user.image && (
+            <img
+              src={user.image}
+              className="rounded-circle"
+              alt="avatar"
+              width="150"
+            />
+          )}
           <div className="mt-3">
             <h4>{user.name}</h4>
             <p className="text-secondary mb-1">{user.profession.name}</p>

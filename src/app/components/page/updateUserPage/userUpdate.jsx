@@ -7,24 +7,35 @@ import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useProfessions } from '../../../hooks/useProfession'
+import { useQualities } from '../../../hooks/useQualities'
+import { useAuth } from '../../../hooks/useAuth'
 
 const UserUpdate = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState()
+  const [errors, setErrors] = useState({})
   const params = useParams()
   const { userId } = params
 
-  const history = useNavigate()
+  console.log('data', data)
 
-  const [data, setData] = useState({
-    email: '',
-    name: '',
-    profession: '',
-    sex: 'male',
-    qualities: [],
-  })
-  const [qualities, setQualities] = useState({})
-  const [errors, setErrors] = useState({})
-  const [professions, setProfession] = useState([])
+  const { isLoading: professionLoading, professions } = useProfessions()
+
+  const professionList = professions.map((quality) => ({
+    label: quality.name,
+    value: quality._id,
+  }))
+
+  const { isLoading: qualitiesLoading, qualities } = useQualities()
+  const qualitiesList = qualities.map((quality) => ({
+    label: quality.name,
+    value: quality._id,
+  }))
+
+  const { currentUser } = useAuth()
+
+  const history = useNavigate()
 
   const getProfessionById = (id) => {
     for (const prof in professions) {
@@ -47,28 +58,46 @@ const UserUpdate = () => {
     return qualitiesArray
   }
 
+  function getQualitiesListById(qualitiesIds) {
+    const qualitiesArray = []
+
+    for (const qualId of qualitiesIds) {
+      for (const quality of qualities) {
+        if (quality._id === qualId) {
+          qualitiesArray.push(quality)
+
+          break
+        }
+      }
+    }
+
+    return qualitiesArray
+  }
+
   const transformData = (data) => {
-    return data.map((qual) => ({ label: qual.name, value: qual._id }))
+    return getQualitiesListById(data).map((qual) => ({
+      label: qual.name,
+      value: qual._id,
+    }))
+    // return data.map((qual) => ({ label: qual.name, value: qual._id }))
   }
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(false)
 
-    api.users.getById(userId).then(({ profession, qualities, ...data }) => {
-      setData((prevState) => ({
-        ...prevState,
-        ...data,
-        qualities: transformData(qualities),
-        profession: profession._id,
-      }))
-    })
+    // updateUserDate()
 
-    api.professions.fetchAll().then((data) => setProfession(data))
-    api.qualities.fetchAll().then((data) => setQualities(data))
-  }, [userId])
+    if (currentUser && !professionLoading && !qualitiesLoading && !data) {
+      setData({
+        ...currentUser,
+        qualities: transformData(currentUser.qualities),
+        profession: currentUser._id,
+      })
+    }
+  }, [currentUser, professionLoading, qualitiesLoading, data])
 
   useEffect(() => {
-    if (data._id) setIsLoading(false)
+    setIsLoading(false)
   }, [data])
 
   const handleChange = (target) => {
@@ -166,15 +195,17 @@ const UserUpdate = () => {
                 error={errors.email}
               />
 
-              <SelectField
-                defaultOption="Choose..."
-                option={professions}
-                onChange={handleChange}
-                value={data.profession}
-                error={errors.profession}
-                label="Выберите свою профессию"
-                name="profession"
-              />
+              {!professionLoading && (
+                <SelectField
+                  defaultOption="Choose..."
+                  option={professionList}
+                  onChange={handleChange}
+                  value={data.profession}
+                  error={errors.profession}
+                  label="Выберите свою профессию"
+                  name="profession"
+                />
+              )}
               <RadioField
                 options={[
                   { name: 'Male', value: 'male' },
@@ -186,13 +217,15 @@ const UserUpdate = () => {
                 onChange={handleChange}
                 label="Выберите свой пол"
               />
-              <MultiSelectField
-                onChange={handleChange}
-                options={qualities}
-                defaultValue={data.qualities}
-                name="qualities"
-                label="Выберите ваши качества"
-              />
+              {!qualitiesLoading && (
+                <MultiSelectField
+                  onChange={handleChange}
+                  options={qualitiesList}
+                  defaultValue={data.qualities}
+                  name="qualities"
+                  label="Выберите ваши качества"
+                />
+              )}
               <button
                 className="btn btn-primary w-100 mx-auto"
                 type="submit"
