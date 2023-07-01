@@ -1,0 +1,52 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+import professionService from '../services/profession.service'
+
+const initialState = {
+  entities: null,
+  error: null,
+  isLoading: true,
+}
+
+export const professionsSlice = createSlice({
+  name: 'professions',
+  initialState,
+  reducers: {
+    professionsRequested: (state) => {
+      state.isLoading = true
+    },
+    professionsReceived: (state, action) => {
+      state.entities = action.payload
+      state.isLoading = false
+    },
+    professionsFailed: (state, action) => {
+      state.error = action.payload
+      state.isLoading = false
+    },
+  },
+})
+
+const { actions, reducer: professionsReducer } = professionsSlice
+
+const { professionsFailed, professionsReceived, professionsRequested } = actions
+
+export const loadProfessionsList = () => async (dispatch) => {
+  dispatch(professionsRequested())
+  try {
+    const { content } = await professionService.get()
+
+    dispatch(professionsReceived(content))
+  } catch (error) {
+    dispatch(professionsFailed(error.message))
+  }
+}
+
+export const getProfessions = () => (state) => state.professions.entities
+
+export const getProfessionsLoadingStatus = () => (state) =>
+  state.professions.isLoading
+
+export const getProfessionById = (id) => (state) =>
+  state.professions.entities.find((u) => u._id === id)
+
+export default professionsReducer

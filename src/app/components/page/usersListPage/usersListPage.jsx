@@ -8,11 +8,17 @@ import Pagination from '../../common/pagination'
 
 import { paginate } from '../../../utils/paginate'
 import { useUser } from '../../../hooks/useUsers'
-import { useProfessions } from '../../../hooks/useProfession'
 import { useAuth } from '../../../hooks/useAuth'
+import { useSelector } from 'react-redux'
+import {
+  getProfessions,
+  getProfessionsLoadingStatus,
+} from '../../../store/professions'
 
 const UsersListPage = () => {
-  const { isLoading: professionsLoading, professions } = useProfessions()
+  const professions = useSelector(getProfessions())
+  const professionsLoading = useSelector(getProfessionsLoadingStatus())
+
   const { users } = useUser()
   const { currentUser } = useAuth()
 

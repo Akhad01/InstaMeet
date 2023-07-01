@@ -12,8 +12,17 @@ import QualitiesProvider from './hooks/useQualities'
 import { AuthProvider } from './hooks/useAuth'
 import ProtectedRoute from './components/ui/protectedRoute'
 import LogOut from './layout/logOut'
+import { useEffect } from 'react'
+import { loadProfessionsList } from './store/professions'
+import { useDispatch } from 'react-redux'
 
 function App() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(loadProfessionsList())
+  }, [dispatch])
+
   return (
     <div className="App">
       <AuthProvider>

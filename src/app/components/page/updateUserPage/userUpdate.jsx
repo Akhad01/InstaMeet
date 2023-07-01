@@ -6,18 +6,24 @@ import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import { useNavigate } from 'react-router-dom'
-import { useProfessions } from '../../../hooks/useProfession'
 import { useQualities } from '../../../hooks/useQualities'
 import { useAuth } from '../../../hooks/useAuth'
+import { useSelector } from 'react-redux'
+import {
+  getProfessions,
+  getProfessionsLoadingStatus,
+} from '../../../store/professions'
 
 const UserUpdate = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
   const [errors, setErrors] = useState({})
 
-  const { isLoading: professionLoading, professions } = useProfessions()
+  const professions = useSelector(getProfessions())
 
-  const professionList = professions.map((quality) => ({
+  const professionsLoading = useSelector(getProfessionsLoadingStatus())
+
+  const professionsList = professions.map((quality) => ({
     label: quality.name,
     value: quality._id,
   }))
@@ -31,27 +37,6 @@ const UserUpdate = () => {
   const { currentUser, updateUserDate } = useAuth()
 
   const navigate = useNavigate()
-
-  // const getProfessionById = (id) => {
-  //   for (const prof in professions) {
-  //     const profData = professions[prof]
-  //     if (profData._id === id) return profData
-  //   }
-  // }
-
-  // const getQualities = (elements) => {
-  //   const qualitiesArray = []
-
-  //   for (const elem of elements) {
-  //     for (const quality in qualities) {
-  //       if (elem.value === qualities[quality]._id) {
-  //         qualitiesArray.push(qualities[quality])
-  //       }
-  //     }
-  //   }
-
-  //   return qualitiesArray
-  // }
 
   function getQualitiesListById(qualitiesIds) {
     const qualitiesArray = []
@@ -145,20 +130,21 @@ const UserUpdate = () => {
   }
 
   useEffect(() => {
-    if (currentUser && !professionLoading && !qualitiesLoading && !data) {
+    if (currentUser && !professionsLoading && !qualitiesLoading && !data) {
       setData({
         ...currentUser,
         qualities: transformData(currentUser.qualities),
         profession: currentUser._id,
       })
     }
-  }, [currentUser, professionLoading, qualitiesLoading, data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, professionsLoading, qualitiesLoading, data])
 
   useEffect(() => {
     if (data && isLoading) {
       setIsLoading(false)
     }
-  }, [data])
+  }, [data, isLoading])
 
   const isValid = Object.keys(errors).length === 0
 
@@ -166,7 +152,7 @@ const UserUpdate = () => {
     <div className="mt-5">
       <div className="row">
         <div className="col-md-6 offset-md-3 shadow p-4">
-          {!isLoading && Object.keys(professionList).length > 0 ? (
+          {!isLoading && Object.keys(professionsList).length > 0 ? (
             <form onSubmit={handleSubmit}>
               <TextField
                 label="Имя"
@@ -184,10 +170,10 @@ const UserUpdate = () => {
                 error={errors.email}
               />
 
-              {!professionLoading && (
+              {!professionsLoading && (
                 <SelectField
                   defaultOption="Choose..."
-                  option={professionList}
+                  option={professionsList}
                   onChange={handleChange}
                   value={data.profession}
                   error={errors.profession}

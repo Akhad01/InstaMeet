@@ -15,6 +15,8 @@ const Comment = ({
 
   const user = getUserById(userId)
 
+  console.log('user', user)
+
   return (
     <div className="bg-light card-body mb-3">
       <div className="row">

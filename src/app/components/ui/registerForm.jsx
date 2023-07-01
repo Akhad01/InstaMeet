@@ -6,10 +6,11 @@ import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 import CheckBoxField from '../common/form/checkBoxField'
-import { useProfessions } from '../../hooks/useProfession'
 import { useQualities } from '../../hooks/useQualities'
 import { useAuth } from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { getProfessions } from '../../store/professions'
 
 const RegisterForm = () => {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ const RegisterForm = () => {
 
   const [errors, setErrors] = useState({})
 
-  const { professions } = useProfessions()
+  const professions = useSelector(getProfessions())
 
   const { qualities } = useQualities()
 
@@ -124,12 +125,10 @@ const RegisterForm = () => {
     }
   }
 
-  const arrayOfProfessions =
-    professions &&
-    Object.keys(professions).map((profession) => ({
-      name: professions[profession].name,
-      value: professions[profession]._id,
-    }))
+  const professionList = professions.map((quality) => ({
+    label: quality.name,
+    value: quality._id,
+  }))
 
   return (
     <form onSubmit={handleSubmit}>
@@ -158,7 +157,7 @@ const RegisterForm = () => {
 
       <SelectField
         defaultOption="Choose..."
-        option={arrayOfProfessions}
+        option={professionList}
         onChange={handleChange}
         value={data.profession}
         error={errors.profession}

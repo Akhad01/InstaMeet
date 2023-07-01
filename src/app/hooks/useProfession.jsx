@@ -46,6 +46,7 @@ export const ProfessionProvider = ({ children }) => {
 
   useEffect(() => {
     getProfessionsList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
