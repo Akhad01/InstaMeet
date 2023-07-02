@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Qualitie from './qualitie'
-import { useQualities } from '../../../hooks/useQualities'
+import { useSelector } from 'react-redux'
+import { getQualitiesLoadingStatus } from '../../../store/qualities'
 
 const QualitiesList = ({ qualities }) => {
-  const { isLoading } = useQualities()
+  const isLoading = useSelector(getQualitiesLoadingStatus())
 
   return (
     <>

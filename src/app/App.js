@@ -15,12 +15,14 @@ import LogOut from './layout/logOut'
 import { useEffect } from 'react'
 import { loadProfessionsList } from './store/professions'
 import { useDispatch } from 'react-redux'
+import { loadQualitiesList } from './store/qualities'
 
 function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(loadProfessionsList())
+    dispatch(loadQualitiesList())
   }, [dispatch])
 
   return (

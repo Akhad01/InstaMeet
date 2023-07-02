@@ -6,11 +6,11 @@ import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 import CheckBoxField from '../common/form/checkBoxField'
-import { useQualities } from '../../hooks/useQualities'
 import { useAuth } from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { getProfessions } from '../../store/professions'
+import { getQualities } from '../../store/qualities'
 
 const RegisterForm = () => {
   const navigate = useNavigate()
@@ -29,7 +29,7 @@ const RegisterForm = () => {
 
   const professions = useSelector(getProfessions())
 
-  const { qualities } = useQualities()
+  const qualities = useSelector(getQualities())
 
   const { signUp } = useAuth()
 

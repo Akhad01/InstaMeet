@@ -6,13 +6,16 @@ import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import { useNavigate } from 'react-router-dom'
-import { useQualities } from '../../../hooks/useQualities'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSelector } from 'react-redux'
 import {
   getProfessions,
   getProfessionsLoadingStatus,
 } from '../../../store/professions'
+import {
+  getQualities,
+  getQualitiesLoadingStatus,
+} from '../../../store/qualities'
 
 const UserUpdate = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -28,7 +31,10 @@ const UserUpdate = () => {
     value: quality._id,
   }))
 
-  const { isLoading: qualitiesLoading, qualities } = useQualities()
+  const qualitiesLoading = useSelector(getQualitiesLoadingStatus())
+
+  const qualities = useSelector(getQualities())
+
   const qualitiesList = qualities.map((quality) => ({
     label: quality.name,
     value: quality._id,
