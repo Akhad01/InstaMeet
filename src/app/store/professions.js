@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import professionService from '../services/profession.service'
+import isOutdated from '../utils/isOutdated'
 
 const initialState = {
   entities: null,
   error: null,
   isLoading: true,
+  lastFetch: null,
 }
 
 export const professionsSlice = createSlice({
@@ -17,6 +19,7 @@ export const professionsSlice = createSlice({
     },
     professionsReceived: (state, action) => {
       state.entities = action.payload
+      state.lastFetch = Date.now()
       state.isLoading = false
     },
     professionsFailed: (state, action) => {
@@ -30,14 +33,19 @@ const { actions, reducer: professionsReducer } = professionsSlice
 
 const { professionsFailed, professionsReceived, professionsRequested } = actions
 
-export const loadProfessionsList = () => async (dispatch) => {
-  dispatch(professionsRequested())
-  try {
-    const { content } = await professionService.get()
+export const loadProfessionsList = () => async (dispatch, getState) => {
+  const { lastFetch } = getState().professions
 
-    dispatch(professionsReceived(content))
-  } catch (error) {
-    dispatch(professionsFailed(error.message))
+  console.log('lastFetch', lastFetch)
+  if (isOutdated(lastFetch)) {
+    dispatch(professionsRequested())
+    try {
+      const { content } = await professionService.get()
+
+      dispatch(professionsReceived(content))
+    } catch (error) {
+      dispatch(professionsFailed(error.message))
+    }
   }
 }
 
