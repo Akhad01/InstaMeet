@@ -24,8 +24,6 @@ const AppLoader = ({ children }) => {
     }
   }, [isLoggedIn])
 
-  console.log('usersStatusLoading', usersStatusLoading)
-
   if (usersStatusLoading) {
     return 'loading...'
   }

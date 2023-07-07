@@ -8,7 +8,6 @@ import { Table } from '../common/table'
 import Profession from './profession'
 
 const UsersTable = ({ users, onSort, selectedSort, onToggleBookmark }) => {
-  console.log('usrs', users)
   const columns = {
     name: {
       path: 'name',

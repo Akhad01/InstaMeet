@@ -121,6 +121,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   async function updateUserDate(data) {
+    console.log('data', data)
     try {
       const { content } = await userService.updateUser(data)
 

@@ -10,10 +10,6 @@ const ProtectedRoute = ({ component: Component, children }) => {
 
   const location = useLocation()
 
-  console.log('render ProtectedRoute')
-
-  console.log('isLoggedIn', !isLoggedIn)
-
   if (!isLoggedIn) {
     return <Navigate to="/login" state={{ from: location.pathname }} />
   }

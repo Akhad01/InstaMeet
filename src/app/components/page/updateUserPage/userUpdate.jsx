@@ -6,8 +6,7 @@ import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../../hooks/useAuth'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   getProfessions,
   getProfessionsLoadingStatus,
@@ -16,12 +15,14 @@ import {
   getQualities,
   getQualitiesLoadingStatus,
 } from '../../../store/qualities'
-import { getCurrentUserData } from '../../../store/users'
+import { getCurrentUserData, updateUser } from '../../../store/users'
 
 const UserUpdate = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
   const [errors, setErrors] = useState({})
+
+  const dispatch = useDispatch()
 
   const professions = useSelector(getProfessions())
 
@@ -41,11 +42,7 @@ const UserUpdate = () => {
     value: quality._id,
   }))
 
-  const { updateUserDate } = useAuth()
-
   const currentUser = useSelector(getCurrentUserData())
-
-  console.log('current', currentUser)
 
   const navigate = useNavigate()
 
@@ -125,17 +122,19 @@ const UserUpdate = () => {
     return Object.keys(errors).length === 0
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     const isValid = validate()
     if (!isValid) {
       return
     }
 
-    await updateUserDate({
-      ...data,
-      qualities: data.qualities.map((quality) => quality.value),
-    })
+    dispatch(
+      updateUser({
+        ...data,
+        qualities: data.qualities.map((quality) => quality.value),
+      })
+    )
 
     navigate(`/users/${currentUser._id}`)
   }
@@ -158,10 +157,6 @@ const UserUpdate = () => {
   }, [data, isLoading])
 
   const isValid = Object.keys(errors).length === 0
-
-  console.log('isLoading', isLoading)
-
-  console.log('data', data)
 
   return (
     <div className="mt-5">

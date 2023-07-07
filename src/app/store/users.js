@@ -59,6 +59,12 @@ export const usersSlice = createSlice({
       state.auth = null
       state.dataLoadded = false
     },
+
+    userUpdateSuccess: (state, actions) => {
+      state.entities[
+        state.entities.findIndex((elem) => elem._id === actions.payload._id)
+      ] = actions.payload
+    },
   },
 })
 
@@ -72,6 +78,7 @@ const {
   authRequestedFailed,
   userCreated,
   userLoggedOut,
+  userUpdateSuccess,
 } = actions
 
 const authRequested = createAction('users/authRequested')
@@ -80,6 +87,9 @@ const userCreateRequested = createAction('users/userCreateRequested')
 const userCreateRequestedFailed = createAction(
   'users/userCreateRequestedFailed'
 )
+
+const userUpdateRequested = createAction('users/userUpdateRequested')
+const userUpdateFailed = createAction('users/userUpdateFailed')
 
 export const login =
   ({ email, password }, redirect, navigate) =>
@@ -128,6 +138,17 @@ export const signUp =
       authRequestedFailed(error.message)
     }
   }
+
+export const updateUser = (payload) => async (dispatch) => {
+  dispatch(userUpdateRequested())
+  try {
+    const { content } = await userService.updateUser(payload)
+
+    dispatch(userUpdateSuccess(content))
+  } catch (error) {
+    dispatch(userUpdateFailed(error.message))
+  }
+}
 
 export const logOut = (navigate) => (dispatch) => {
   localStorageService.deleteToken()
