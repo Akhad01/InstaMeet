@@ -53,6 +53,12 @@ export const usersSlice = createSlice({
       }
       state.entities.push(actions.payload)
     },
+    userLoggedOut: (state) => {
+      state.entities = null
+      state.isLoggedIn = false
+      state.auth = null
+      state.dataLoadded = false
+    },
   },
 })
 
@@ -65,6 +71,7 @@ const {
   authRequestedSuccess,
   authRequestedFailed,
   userCreated,
+  userLoggedOut,
 } = actions
 
 const authRequested = createAction('users/authRequested')
@@ -121,6 +128,12 @@ export const signUp =
       authRequestedFailed(error.message)
     }
   }
+
+export const logOut = (navigate) => (dispatch) => {
+  localStorageService.deleteToken()
+  dispatch(userLoggedOut())
+  navigate('/')
+}
 
 function createUser(payload) {
   return async function (dispatch) {
