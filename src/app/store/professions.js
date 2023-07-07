@@ -36,7 +36,6 @@ const { professionsFailed, professionsReceived, professionsRequested } = actions
 export const loadProfessionsList = () => async (dispatch, getState) => {
   const { lastFetch } = getState().professions
 
-  console.log('lastFetch', lastFetch)
   if (isOutdated(lastFetch)) {
     dispatch(professionsRequested())
     try {
@@ -54,7 +53,10 @@ export const getProfessions = () => (state) => state.professions.entities
 export const getProfessionsLoadingStatus = () => (state) =>
   state.professions.isLoading
 
-export const getProfessionById = (id) => (state) =>
-  state.professions.entities.find((u) => u._id === id)
+export const getProfessionById = (id) => (state) => {
+  if (state.professions.entities) {
+    return state.professions.entities.find((p) => p._id === id)
+  }
+}
 
 export default professionsReducer

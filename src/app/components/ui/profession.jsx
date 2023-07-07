@@ -8,11 +8,10 @@ import {
 } from '../../store/professions'
 
 const Profession = ({ id }) => {
+  const isLoading = useSelector(getProfessionsLoadingStatus())
   const prof = useSelector(getProfessionById(id))
 
-  const isLoading = useSelector(getProfessionsLoadingStatus())
-
-  if (!isLoading) {
+  if (isLoading) {
     return <p>{prof.name}</p>
   } else {
     return 'Loading...'

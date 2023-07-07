@@ -6,13 +6,14 @@ import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 import CheckBoxField from '../common/form/checkBoxField'
-import { useAuth } from '../../hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getProfessions } from '../../store/professions'
 import { getQualities } from '../../store/qualities'
+import { signUp } from '../../store/users'
+import { useNavigate } from 'react-router-dom'
 
 const RegisterForm = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const [data, setData] = useState({
@@ -30,8 +31,6 @@ const RegisterForm = () => {
   const professions = useSelector(getProfessions())
 
   const qualities = useSelector(getQualities())
-
-  const { signUp } = useAuth()
 
   const qualitiesList = qualities.map((quality) => ({
     label: quality.name,
@@ -103,7 +102,7 @@ const RegisterForm = () => {
 
   const isValid = Object.keys(errors).length === 0
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     const isValid = validate()
 
@@ -116,13 +115,7 @@ const RegisterForm = () => {
       qualities: data.qualities.map((q) => q.value),
     }
 
-    try {
-      await signUp(newData)
-
-      navigate('/')
-    } catch (error) {
-      setErrors(error)
-    }
+    dispatch(signUp(newData, navigate))
   }
 
   const professionList = professions.map((quality) => ({

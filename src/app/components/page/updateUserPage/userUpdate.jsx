@@ -16,6 +16,7 @@ import {
   getQualities,
   getQualitiesLoadingStatus,
 } from '../../../store/qualities'
+import { getCurrentUserData } from '../../../store/users'
 
 const UserUpdate = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -40,7 +41,11 @@ const UserUpdate = () => {
     value: quality._id,
   }))
 
-  const { currentUser, updateUserDate } = useAuth()
+  const { updateUserDate } = useAuth()
+
+  const currentUser = useSelector(getCurrentUserData())
+
+  console.log('current', currentUser)
 
   const navigate = useNavigate()
 
@@ -153,6 +158,10 @@ const UserUpdate = () => {
   }, [data, isLoading])
 
   const isValid = Object.keys(errors).length === 0
+
+  console.log('isLoading', isLoading)
+
+  console.log('data', data)
 
   return (
     <div className="mt-5">

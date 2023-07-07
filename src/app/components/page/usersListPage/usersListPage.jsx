@@ -7,20 +7,20 @@ import UsersTable from '../../ui/usersTable'
 import Pagination from '../../common/pagination'
 
 import { paginate } from '../../../utils/paginate'
-import { useUser } from '../../../hooks/useUsers'
-import { useAuth } from '../../../hooks/useAuth'
 import { useSelector } from 'react-redux'
 import {
   getProfessions,
   getProfessionsLoadingStatus,
 } from '../../../store/professions'
+import { getCurrentUserId, getUsers } from '../../../store/users'
 
 const UsersListPage = () => {
   const professions = useSelector(getProfessions())
   const professionsLoading = useSelector(getProfessionsLoadingStatus())
 
-  const { users } = useUser()
-  const { currentUser } = useAuth()
+  const users = useSelector(getUsers())
+
+  const currentUserId = useSelector(getCurrentUserId())
 
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedProf, setSelectedProf] = useState()
@@ -75,7 +75,7 @@ const UsersListPage = () => {
             JSON.stringify(user.profession) === JSON.stringify(selectedProf)
         )
       : data
-    return filteredUsers.filter((u) => u._id !== currentUser._id)
+    return filteredUsers.filter((u) => u._id !== currentUserId)
   }
 
   const filteredUsers = filterUsers(users)

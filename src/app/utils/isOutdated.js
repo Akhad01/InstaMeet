@@ -1,6 +1,4 @@
 function isOutdated(date) {
-  console.log('date', date)
-
   if (Date.now() - date > 10 * 60 * 1000) return true
   return false
 }

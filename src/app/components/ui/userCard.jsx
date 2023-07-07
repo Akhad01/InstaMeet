@@ -1,12 +1,13 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useAuth } from '../../hooks/useAuth'
+import { useSelector } from 'react-redux'
+import { getCurrentUserId } from '../../store/users'
 
 const UserCard = ({ user, userId }) => {
   const history = useNavigate()
 
-  const { currentUser } = useAuth()
+  const currentUserId = useSelector(getCurrentUserId())
 
   const handleClick = () => {
     history(`/users/${userId}/edit`)
@@ -14,7 +15,7 @@ const UserCard = ({ user, userId }) => {
   return (
     <div className="card mb-3">
       <div className="card-body">
-        {user._id === currentUser._id && (
+        {user._id === currentUserId && (
           <button
             onClick={handleClick}
             className="position-absolute top-0 end-0 btn btn-light btn-sm"
