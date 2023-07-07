@@ -4,6 +4,7 @@ import userService from '../services/user.service'
 import authService from '../services/auth.service'
 import localStorageService from '../services/localStorage.service'
 import { getRandomInt } from '../utils/getRandomInt'
+import generateAuthError from '../utils/generateAuthError'
 
 const initialState = localStorageService.getAccessToken()
   ? {
@@ -65,6 +66,9 @@ export const usersSlice = createSlice({
         state.entities.findIndex((elem) => elem._id === actions.payload._id)
       ] = actions.payload
     },
+    authRequested: (state) => {
+      state.error = null
+    },
   },
 })
 
@@ -99,12 +103,17 @@ export const login =
       const data = await authService.signIn({ email, password })
 
       dispatch(authRequestedSuccess({ userId: data.localId }))
-      console.log('redirect', redirect)
       localStorageService.setToken(data)
 
       navigate(redirect)
     } catch (error) {
-      dispatch(authRequestedFailed(error.message))
+      const { code, message } = error.response.data.error
+      if (code === 400) {
+        const errorMessage = generateAuthError(message)
+        dispatch(authRequestedFailed(errorMessage))
+      } else {
+        dispatch(authRequestedFailed(error.message))
+      }
     }
   }
 
@@ -139,12 +148,13 @@ export const signUp =
     }
   }
 
-export const updateUser = (payload) => async (dispatch) => {
+export const updateUser = (payload, navigate) => async (dispatch) => {
   dispatch(userUpdateRequested())
   try {
     const { content } = await userService.updateUser(payload)
 
     dispatch(userUpdateSuccess(content))
+    navigate(`/users/${payload._id}`)
   } catch (error) {
     dispatch(userUpdateFailed(error.message))
   }
@@ -203,5 +213,7 @@ export const getCurrentUserData = () => (state) => {
     ? state.users.entities.find((u) => u._id === state.users.auth.userId)
     : null
 }
+
+export const getAuthError = () => (state) => state.users.error
 
 export default usersReducer

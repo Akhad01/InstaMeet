@@ -130,13 +130,14 @@ const UserUpdate = () => {
     }
 
     dispatch(
-      updateUser({
-        ...data,
-        qualities: data.qualities.map((quality) => quality.value),
-      })
+      updateUser(
+        {
+          ...data,
+          qualities: data.qualities.map((quality) => quality.value),
+        },
+        navigate
+      )
     )
-
-    navigate(`/users/${currentUser._id}`)
   }
 
   useEffect(() => {
