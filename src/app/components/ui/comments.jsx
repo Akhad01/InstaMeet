@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import CommentComponents from './commentComponents'
 import AddCommentForm from '../common/addCommentForm'
 import { orderBy } from 'lodash'
-import { useComments } from '../../hooks/useComments'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   createComment,

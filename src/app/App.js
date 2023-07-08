@@ -5,7 +5,6 @@ import Users from './layout/users'
 import Main from './layout/main'
 import Login from './layout/login'
 import NavBar from './components/ui/navBar'
-import { AuthProvider } from './hooks/useAuth'
 import ProtectedRoute from './components/ui/protectedRoute'
 import LogOut from './layout/logOut'
 import AppLoader from './components/ui/hoc/appLoader'
@@ -16,23 +15,21 @@ function App() {
   return (
     <div className="App">
       <AppLoader>
-        <AuthProvider>
-          <NavBar />
-          <Routes>
-            <Route path="login/:type?" element={<Login />} />
-            <Route
-              path="/users/:userId?/:edit?"
-              element={
-                <ProtectedRoute>
-                  <Users />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/logout" element={<LogOut />} />
-            <Route path="/" element={<Main />} />
-            <Route path="*" element={<Main />} />
-          </Routes>
-        </AuthProvider>
+        <NavBar />
+        <Routes>
+          <Route path="login/:type?" element={<Login />} />
+          <Route
+            path="/users/:userId?/:edit?"
+            element={
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/logout" element={<LogOut />} />
+          <Route path="/" element={<Main />} />
+          <Route path="*" element={<Main />} />
+        </Routes>
       </AppLoader>
       <ToastContainer />
     </div>
