@@ -11,7 +11,7 @@ const Profession = ({ id }) => {
   const isLoading = useSelector(getProfessionsLoadingStatus())
   const prof = useSelector(getProfessionById(id))
 
-  if (isLoading) {
+  if (!isLoading) {
     return <p>{prof.name}</p>
   } else {
     return 'Loading...'

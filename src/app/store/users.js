@@ -46,7 +46,6 @@ export const usersSlice = createSlice({
     },
     authRequestedFailed: (state, actions) => {
       state.error = actions.payload
-      state.isLoggedIn = true
     },
     userCreated: (state, actions) => {
       if (!Array.isArray(state.entities)) {
