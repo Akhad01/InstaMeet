@@ -11,14 +11,14 @@ const Profession = ({ id }) => {
   const isLoading = useSelector(getProfessionsLoadingStatus())
   const prof = useSelector(getProfessionById(id))
 
-  if (!isLoading) {
-    return <p>{prof.name}</p>
-  } else {
-    return 'Loading...'
+  if (isLoading) {
+    return 'Loading'
   }
+
+  return <p>{prof.name}</p>
 }
 
-Profession.protoTypes = {
+Profession.propTypes = {
   id: PropTypes.string,
 }
 

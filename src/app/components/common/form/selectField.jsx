@@ -38,7 +38,7 @@ const SelectField = ({
         <option disabled value="">
           {defaultOption}
         </option>
-        {optionsArray &&
+        {optionsArray.length > 0 &&
           optionsArray.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
