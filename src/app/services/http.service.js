@@ -13,22 +13,23 @@ http.defaults.baseURL = configFile.apiEndpoint
 
 http.interceptors.request.use(
   async function (config) {
+    const expiresDate = localStorageService.getTokenDate()
+    const refreshToken = localStorageService.getRefreshToken()
+    const isExpired = refreshToken && expiresDate < Date.now()
+
     if (configFile.isFireBase) {
       const containSlash = /\/$/.test(config.url)
 
       config.url =
         (containSlash ? config.url.slice(0, -1) : config.url) + '.json'
 
-      const expiresDate = localStorageService.getTokenDate()
-      const refreshToken = localStorageService.getRefreshToken()
-
-      if (refreshToken && expiresDate < Date.now()) {
+      if (isExpired) {
         const data = authService.refresh()
 
         localStorageService.setToken({
           refreshToken: data.refresh_token,
-          idToken: data.id_token,
-          localId: data.user_id,
+          accessToken: data.accessToken,
+          userId: data.userId,
           expiresIn: data.expires_in,
         })
       }
@@ -37,6 +38,21 @@ http.interceptors.request.use(
 
       if (asseccToken) {
         config.params = { ...config.params, auth: asseccToken }
+      }
+    } else {
+      if (isExpired) {
+        const data = authService.refresh()
+
+        localStorageService.setToken(data)
+      }
+
+      const asseccToken = localStorageService.getAccessToken()
+
+      if (asseccToken) {
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer ${asseccToken}`,
+        }
       }
     }
 
@@ -58,7 +74,6 @@ function transformData(data) {
 http.interceptors.response.use(
   (res) => {
     res.data = { content: transformData(res.data) }
-
     return res
   },
   function (error) {

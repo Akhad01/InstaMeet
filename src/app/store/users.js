@@ -3,7 +3,6 @@ import { createAction, createSlice } from '@reduxjs/toolkit'
 import userService from '../services/user.service'
 import authService from '../services/auth.service'
 import localStorageService from '../services/localStorage.service'
-import { getRandomInt } from '../utils/getRandomInt'
 import generateAuthError from '../utils/generateAuthError'
 
 const initialState = localStorageService.getAccessToken()
@@ -79,17 +78,11 @@ const {
   usersRequested,
   authRequestedSuccess,
   authRequestedFailed,
-  userCreated,
   userLoggedOut,
   userUpdateSuccess,
 } = actions
 
 const authRequested = createAction('users/authRequested')
-
-const userCreateRequested = createAction('users/userCreateRequested')
-const userCreateRequestedFailed = createAction(
-  'users/userCreateRequestedFailed'
-)
 
 const userUpdateRequested = createAction('users/userUpdateRequested')
 const userUpdateFailed = createAction('users/userUpdateFailed')
@@ -101,8 +94,8 @@ export const login =
     try {
       const data = await authService.signIn({ email, password })
 
-      dispatch(authRequestedSuccess({ userId: data.localId }))
       localStorageService.setToken(data)
+      dispatch(authRequestedSuccess({ userId: data.userId }))
 
       navigate(redirect)
     } catch (error) {
@@ -116,36 +109,19 @@ export const login =
     }
   }
 
-export const signUp =
-  ({ email, password, ...rest }, navigate) =>
-  async (dispatch) => {
-    dispatch(authRequested())
-    try {
-      const data = await authService.signUp({ email, password })
+export const signUp = (payload, navigate) => async (dispatch) => {
+  dispatch(authRequested())
+  try {
+    const data = await authService.signUp(payload)
 
-      localStorageService.setToken(data)
+    localStorageService.setToken(data)
 
-      dispatch(authRequestedSuccess({ userId: data.localId }))
-
-      dispatch(
-        createUser({
-          _id: data.localId,
-          rate: getRandomInt(1, 5),
-          completedMeetings: getRandomInt(0, 250),
-          email,
-          image: `https://avatars.dicebear.com/api/avataaars/${(
-            Math.random() + 1
-          )
-            .toString(36)
-            .substring(7)}.svg`,
-          ...rest,
-          navigate,
-        })
-      )
-    } catch (error) {
-      authRequestedFailed(error.message)
-    }
+    dispatch(authRequestedSuccess({ userId: data.userId }))
+    navigate('/')
+  } catch (error) {
+    authRequestedFailed(error.message)
   }
+}
 
 export const updateUser = (payload, navigate) => async (dispatch) => {
   dispatch(userUpdateRequested())
@@ -163,21 +139,6 @@ export const logOut = (navigate) => (dispatch) => {
   localStorageService.deleteToken()
   dispatch(userLoggedOut())
   navigate('/')
-}
-
-function createUser(payload) {
-  return async function (dispatch) {
-    dispatch(userCreateRequested())
-
-    try {
-      const { content } = await userService.create(payload)
-
-      dispatch(userCreated(content))
-      payload.navigate('/')
-    } catch (error) {
-      dispatch(userCreateRequestedFailed(error.message))
-    }
-  }
 }
 
 export const loadUsersList = () => async (dispatch, getState) => {

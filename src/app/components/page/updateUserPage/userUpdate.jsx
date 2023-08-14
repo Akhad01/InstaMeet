@@ -145,7 +145,7 @@ const UserUpdate = () => {
       setData({
         ...currentUser,
         qualities: transformData(currentUser.qualities),
-        profession: currentUser._id,
+        profession: currentUser.profession,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
